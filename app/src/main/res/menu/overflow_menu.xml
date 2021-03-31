@@ -17,8 +17,14 @@
   ~
   -->
 
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/show_all_menu"
+        android:title="@string/show_all" />
+    <item
+        android:id="@+id/show_rent_menu"
+        android:title="@string/show_rent" />
+    <item
+        android:id="@+id/show_buy_menu"
+        android:title="@string/show_buy" />
+</menu>
