@@ -19,6 +19,7 @@ package com.mobilopers.marsstate
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.mobilopers.marsstate.R
 
 class MainActivity : AppCompatActivity() {
 
