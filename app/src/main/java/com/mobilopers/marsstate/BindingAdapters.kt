@@ -17,6 +17,7 @@
 
 package com.mobilopers.marsstate
 
+import android.view.View
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mobilopers.marsstate.network.MarsProperty
+import com.mobilopers.marsstate.overview.OverviewViewModel
 import com.mobilopers.marsstate.overview.PhotoGridAdapter
 
 @BindingAdapter("listData")
@@ -46,4 +48,21 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                 .into(imgView)
     }
 
+}
+
+@BindingAdapter("marsApiStatus")
+fun bindStatus(imgView: ImageView, status: OverviewViewModel.MarsApistatus?) {
+    when(status) {
+        OverviewViewModel.MarsApistatus.LOADING -> {
+            imgView.visibility = View.VISIBLE
+            imgView.setImageResource(R.drawable.loading_animation)
+        }
+        OverviewViewModel.MarsApistatus.DONE -> {
+            imgView.visibility = View.GONE
+        }
+        OverviewViewModel.MarsApistatus.ERROR -> {
+            imgView.visibility = View.VISIBLE
+            imgView.setImageResource(R.drawable.ic_connection_error)
+        }
+    }
 }

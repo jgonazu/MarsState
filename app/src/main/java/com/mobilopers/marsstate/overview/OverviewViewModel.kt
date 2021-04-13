@@ -32,17 +32,24 @@ import kotlinx.coroutines.launch
  */
 class OverviewViewModel : ViewModel() {
 
+    enum class MarsApistatus {LOADING, ERROR, DONE}
+
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _status = MutableLiveData<String>()
+    private val _status = MutableLiveData<MarsApistatus>()
 
     // The external immutable LiveData for the request status String
-    val status: LiveData<String>
+    val status: LiveData<MarsApistatus>
         get() = _status
 
     private val _marsproperties = MutableLiveData<List<MarsProperty>>()
 
     val marsproperties: LiveData<List<MarsProperty>>
         get() = _marsproperties
+
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
@@ -59,16 +66,27 @@ class OverviewViewModel : ViewModel() {
      */
     private fun getMarsRealEstateProperties() {
         coroutineScope.launch {
+            _status.value = MarsApistatus.LOADING
             var getPropertiesDeferred = MarsApi.retrofitService.getPropertiesAsync()
             try {
                 var listResult = getPropertiesDeferred.await()
+                _status.value = MarsApistatus.DONE
                 if (listResult.size > 0) {
                     _marsproperties.value = listResult
                 }
             } catch (e: Exception) {
-                _status.value = "Failure: ${e.message}"
+                _status.value = MarsApistatus.ERROR
+                _marsproperties.value = ArrayList()
             }
         }
+    }
+
+    fun navigateToDetail(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+
+    fun navigateToDetailCompleted() {
+        _navigateToSelectedProperty.value = null
     }
 
     override fun onCleared() {

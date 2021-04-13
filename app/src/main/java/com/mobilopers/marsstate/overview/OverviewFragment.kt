@@ -20,7 +20,9 @@ package com.mobilopers.marsstate.overview
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.mobilopers.marsstate.R
 import com.mobilopers.marsstate.databinding.FragmentOverviewBinding
 import com.mobilopers.marsstate.databinding.GridViewItemBinding
@@ -51,7 +53,16 @@ class OverviewFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel
 
-        binding.photosGrid.adapter = PhotoGridAdapter()
+        binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
+            viewModel.navigateToDetail(it)
+        })
+
+        viewModel.navigateToSelectedProperty.observe(this, Observer {
+            if ( null != it ) {
+                findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
+                viewModel.navigateToDetailCompleted()
+            }
+        })
 
         setHasOptionsMenu(true)
         return binding.root
